@@ -1,4 +1,5 @@
 import 'package:expense_tracker/views/login-view.dart';
+import 'package:expense_tracker/views/register-view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +8,13 @@ import 'firebase_options.dart';
 void main(List<String> args) {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    MaterialApp(
+     MaterialApp(
       title: 'notes app',
-      home: HomePage(),
+      home: const HomePage(),
+      routes: {
+        '/login/' :(context) =>  const LoginView(),
+        '/register/': (context) => const RegisterView()
+      },
     ),
   );
 }
@@ -19,12 +24,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 24, 23, 29),
-        title: const Text('Login'),
-      ),
-      body: FutureBuilder(
+    return  FutureBuilder(
           future: Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform,
           ),
@@ -33,16 +33,11 @@ class HomePage extends StatelessWidget {
               case ConnectionState.done:
                 final user = FirebaseAuth.instance.currentUser;
                 return const LoginView();
-                // if (user?.emailVerified ?? false) {
-                //   return const Text('user verified');
-                // } else {
-                //   return const VerifyEmailView();
-                // }
+                
               default:
-                return const Text("loading...");
+                return const CircularProgressIndicator();
             }
-          }),
-    );
+          });
   }
 }
 
