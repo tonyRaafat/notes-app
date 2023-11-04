@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -34,9 +35,10 @@ class _LoginViewState extends State<LoginView> {
       appBar: AppBar(
           title: const Text(
         'Login',
-      )),
+      )
+      ),
       body: Container(
-        padding: EdgeInsets.all(5),
+        padding: const EdgeInsets.all(5),
         child: Column(
           children: [
             TextField(
@@ -61,18 +63,24 @@ class _LoginViewState extends State<LoginView> {
                       try {
                         final userCredential = await FirebaseAuth.instance
                             .signInWithEmailAndPassword(
-                                email: email, password: pass);
+                              email: email, password: pass);
+                              devtools.log(userCredential.toString());
+                          // if(userCredential??false){
+                            Navigator.of(context).pushNamedAndRemoveUntil('/my-notes/', (route) => false);
+                          // }
                       } on FirebaseAuthException catch (e) {
-                        print(e.code);
+                        devtools.log(e.code.toString());
                       }
+
+                      
                     },
                     child: const Text("Login"))),
             Center(
               child: TextButton(
                 onPressed: () => {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/register/', (route) => false)
-                        },
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/register/', (route) => false)
+                },
                 child: const Text("have registered yet? register here!"),
               ),
             )
