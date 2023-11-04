@@ -15,14 +15,14 @@ void main(List<String> args) {
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({ Key? key }) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-         backgroundColor: const Color.fromARGB(255, 24, 23, 29),
-          title: const Text('Login'),
+        backgroundColor: const Color.fromARGB(255, 24, 23, 29),
+        title: const Text('Login'),
       ),
       body: FutureBuilder(
           future: Firebase.initializeApp(
@@ -31,8 +31,13 @@ class HomePage extends StatelessWidget {
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.done:
-                print(FirebaseAuth.instance.currentUser);
-                return const Text('done');
+                final user = FirebaseAuth.instance.currentUser;
+                return const LoginView();
+                // if (user?.emailVerified ?? false) {
+                //   return const Text('user verified');
+                // } else {
+                //   return const VerifyEmailView();
+                // }
               default:
                 return const Text("loading...");
             }
@@ -40,4 +45,5 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
 
