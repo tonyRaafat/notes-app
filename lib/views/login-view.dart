@@ -1,3 +1,4 @@
+import 'package:expense_tracker/constants/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
@@ -49,9 +50,10 @@ class _LoginViewState extends State<LoginView> {
                   hintText: "email", contentPadding: EdgeInsets.only(left: 10)),
             ),
             TextField(
+              enableInteractiveSelection: true,
               controller: _pass,
               obscureText: true,
-              autocorrect: false,
+              autofillHints: [AutofillHints.password],
               decoration: const InputDecoration(
                   hintText: "pass", contentPadding: EdgeInsets.only(left: 10)),
             ),
@@ -66,7 +68,7 @@ class _LoginViewState extends State<LoginView> {
                               email: email, password: pass);
                               devtools.log(userCredential.toString());
                           // if(userCredential??false){
-                            Navigator.of(context).pushNamedAndRemoveUntil('/my-notes/', (route) => false);
+                            Navigator.of(context).pushNamedAndRemoveUntil(notesRoute, (route) => false);
                           // }
                       } on FirebaseAuthException catch (e) {
                         devtools.log(e.code.toString());
@@ -79,7 +81,7 @@ class _LoginViewState extends State<LoginView> {
               child: TextButton(
                 onPressed: () => {
                   Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/register/', (route) => false)
+                      .pushNamedAndRemoveUntil(registerRoute, (route) => false)
                 },
                 child: const Text("have registered yet? register here!"),
               ),

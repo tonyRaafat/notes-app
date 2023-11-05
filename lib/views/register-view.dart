@@ -1,3 +1,4 @@
+import 'package:expense_tracker/constants/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -65,7 +66,7 @@ class _RegisterViewState extends State<RegisterView> {
             TextButton(
                 onPressed: () => {
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/login/', (route) => false)
+                          loginRoute, (route) => false)
                     },
                 child: const Text('Login here!')),
           ],

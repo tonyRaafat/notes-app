@@ -1,4 +1,5 @@
 import 'dart:developer' as devtools show log;
+import 'package:expense_tracker/constants/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,7 @@ class _MyNotesViewState extends State<MyNotesView> {
                   final shouldLogout = await showLogoutDialog(context);
                   if(shouldLogout){
                     await FirebaseAuth.instance.signOut();
-                    Navigator.of(context).pushNamedAndRemoveUntil('/login/', (route) => false);
+                    Navigator.of(context).pushNamedAndRemoveUntil(loginRoute, (route) => false);
                   }
                   break;
               }

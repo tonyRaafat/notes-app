@@ -1,4 +1,5 @@
 
+import 'package:expense_tracker/constants/routes.dart';
 import 'package:expense_tracker/views/login-view.dart';
 import 'package:expense_tracker/views/note-view.dart';
 import 'package:expense_tracker/views/register-view.dart';
@@ -16,9 +17,9 @@ void main(List<String> args) {
       
       home: const HomePage(),
       routes: {
-        '/login/' :(context) =>  const LoginView(),
-        '/register/': (context) => const RegisterView(),
-        '/my-notes/':(context)=> const MyNotesView()
+        loginRoute :(context) =>  const LoginView(),
+        registerRoute: (context) => const RegisterView(),
+        notesRoute:(context)=> const MyNotesView()
       },
     ),
   );
