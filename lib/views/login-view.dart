@@ -13,10 +13,12 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _pass;
+  bool badPass = false;
 
   @override
   void initState() {
     // TODO: implement initState
+
     _email = TextEditingController();
     _pass = TextEditingController();
     super.initState();
@@ -36,26 +38,42 @@ class _LoginViewState extends State<LoginView> {
       appBar: AppBar(
           title: const Text(
         'Login',
-      )
-      ),
+      )),
       body: Container(
         padding: const EdgeInsets.all(5),
         child: Column(
           children: [
-            TextField(
-              enableInteractiveSelection: true,
-              controller: _email,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                  hintText: "email", contentPadding: EdgeInsets.only(left: 10)),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                enableInteractiveSelection: true,
+                controller: _email,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                    hintText: "email@gmail.com",
+                    focusedBorder: OutlineInputBorder(),
+                    border: OutlineInputBorder(),
+                    label:  Text('email'),
+                    contentPadding: EdgeInsets.only(left: 10)),
+              ),
             ),
-            TextField(
-              enableInteractiveSelection: true,
-              controller: _pass,
-              obscureText: true,
-              autofillHints: [AutofillHints.password],
-              decoration: const InputDecoration(
-                  hintText: "pass", contentPadding: EdgeInsets.only(left: 10)),
+            Container(
+              margin: const EdgeInsets.all(8.0),
+              child: TextField(
+                enableInteractiveSelection: true,
+                controller: _pass,
+                obscureText: true,
+                autofillHints:const [AutofillHints.password],
+                decoration: const InputDecoration(
+                    label: Text(
+                      'password',
+                      selectionColor: Color.fromARGB(0, 196, 36, 36),
+                    ),
+                    focusedBorder: OutlineInputBorder(),
+                    border: OutlineInputBorder(),
+                    hintText: "pass",
+                    contentPadding: EdgeInsets.only(left: 10)),
+              ),
             ),
             Center(
                 child: TextButton(
@@ -65,18 +83,23 @@ class _LoginViewState extends State<LoginView> {
                       try {
                         final userCredential = await FirebaseAuth.instance
                             .signInWithEmailAndPassword(
-                              email: email, password: pass);
-                              devtools.log(userCredential.toString());
-                          // if(userCredential??false){
-                            Navigator.of(context).pushNamedAndRemoveUntil(notesRoute, (route) => false);
-                          // }
+                                email: email, password: pass);
+                        devtools.log(userCredential.toString());
+                        final user = FirebaseAuth.instance.currentUser;
+                        if (user?.emailVerified ?? false) {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              notesRoute, (route) => false);
+                        } else {
+                          Navigator.of(context)
+                              .pushNamed(emailVerificationRoute);
+                        }
                       } on FirebaseAuthException catch (e) {
                         devtools.log(e.code.toString());
                       }
-
-                      
                     },
-                    child: const Text("Login"))),
+                    child: const Text("Login")
+                    )
+                    ),
             Center(
               child: TextButton(
                 onPressed: () => {

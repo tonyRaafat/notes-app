@@ -13,13 +13,14 @@ void main(List<String> args) {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
      MaterialApp(
-      title: 'notes app',
       
+      title: 'notes app',
       home: const HomePage(),
       routes: {
         loginRoute :(context) =>  const LoginView(),
         registerRoute: (context) => const RegisterView(),
-        notesRoute:(context)=> const MyNotesView()
+        notesRoute:(context)=> const MyNotesView(),
+        emailVerificationRoute:(context) => const VerifyEmailView(),
       },
     ),
   );
@@ -43,6 +44,7 @@ class HomePage extends StatelessWidget {
                 if(user.emailVerified){
                   return const MyNotesView();
                 }else{
+                  
                   return const VerifyEmailView();
                 }
                 }else{

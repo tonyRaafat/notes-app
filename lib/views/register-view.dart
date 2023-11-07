@@ -1,6 +1,7 @@
 import 'package:expense_tracker/constants/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as devTools show log;
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -56,10 +57,13 @@ class _RegisterViewState extends State<RegisterView> {
               onPressed: () async {
                 final email = _email.text;
                 final pass = _pass.text;
-                final userCredential = await FirebaseAuth.instance
-                    .createUserWithEmailAndPassword(
-                        email: email, password: pass);
-                print(userCredential);
+                try{final userCredential = await FirebaseAuth.instance
+                    .createUserWithEmailAndPassword(email: email, password: pass);
+                    Navigator.of(context).pushNamed(emailVerificationRoute);
+                    
+                }on FirebaseAuthException catch(e){
+                  devTools.log(e.code.toString());
+                }
               },
               child: const Text("Register"),
             ),
