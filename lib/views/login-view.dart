@@ -42,7 +42,11 @@ class _LoginViewState extends State<LoginView> {
       body: Container(
         padding: const EdgeInsets.all(5),
         child: Column(
+         
           children: [
+            const SizedBox(
+              height: 200,
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -54,7 +58,8 @@ class _LoginViewState extends State<LoginView> {
                     focusedBorder: OutlineInputBorder(),
                     border: OutlineInputBorder(),
                     label:  Text('email'),
-                    contentPadding: EdgeInsets.only(left: 10)),
+                    contentPadding: EdgeInsets.only(left: 10)
+                    ),
               ),
             ),
             Container(
@@ -72,42 +77,56 @@ class _LoginViewState extends State<LoginView> {
                     focusedBorder: OutlineInputBorder(),
                     border: OutlineInputBorder(),
                     hintText: "pass",
-                    contentPadding: EdgeInsets.only(left: 10)),
+                    contentPadding: EdgeInsets.only(left: 10)
+                    ),
               ),
             ),
-            Center(
-                child: TextButton(
-                    onPressed: () async {
-                      final email = _email.text;
-                      final pass = _pass.text;
-                      try {
-                        final userCredential = await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                                email: email, password: pass);
-                        devtools.log(userCredential.toString());
-                        final user = FirebaseAuth.instance.currentUser;
-                        if (user?.emailVerified ?? false) {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              notesRoute, (route) => false);
-                        } else {
-                          Navigator.of(context)
-                              .pushNamed(emailVerificationRoute);
-                        }
-                      } on FirebaseAuthException catch (e) {
-                        devtools.log(e.code.toString());
-                      }
-                    },
-                    child: const Text("Login")
+            Row(
+              children: [
+                Expanded(
+                    
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(7,5,7,0),
+                      child: ElevatedButton(
+                          
+                          onPressed: () async {
+                            final email = _email.text;
+                            final pass = _pass.text;
+                            try {
+                              final userCredential = await FirebaseAuth.instance
+                                  .signInWithEmailAndPassword(
+                                      email: email, password: pass);
+                              devtools.log(userCredential.toString());
+                              final user = FirebaseAuth.instance.currentUser;
+                              if (user?.emailVerified ?? false) {
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    notesRoute, (route) => false);
+                              } else {
+                                Navigator.of(context)
+                                    .pushNamed(emailVerificationRoute);
+                              }
+                            } on FirebaseAuthException catch (e) {
+                              devtools.log(e.code.toString());
+                            }
+                          },
+                          child: const Text("Login")
+                          ),
                     )
-                    ),
-            Center(
-              child: TextButton(
-                onPressed: () => {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil(registerRoute, (route) => false)
-                },
-                child: const Text("have registered yet? register here!"),
-              ),
+                        ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("have registered yet?"),
+                TextButton(
+                  onPressed: () => {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil(registerRoute, (route) => false)
+                  },
+                  child: const Text("register here!"),
+                ),
+              ],
             )
           ],
         ),
