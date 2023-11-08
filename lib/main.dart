@@ -13,7 +13,7 @@ void main(List<String> args) {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
      MaterialApp(
-      
+      theme: ThemeData.dark(),
       title: 'notes app',
       home: const HomePage(),
       routes: {

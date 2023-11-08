@@ -41,11 +41,11 @@ class _LoginViewState extends State<LoginView> {
       )),
       body: Container(
         padding: const EdgeInsets.all(5),
-        child: Column(
+        child: ListView(
          
           children: [
             const SizedBox(
-              height: 200,
+              height: 150,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

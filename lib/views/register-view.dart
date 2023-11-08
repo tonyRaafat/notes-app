@@ -36,9 +36,9 @@ class _RegisterViewState extends State<RegisterView> {
       appBar: AppBar(title: const Text("Register")),
       body: Container(
         padding: EdgeInsets.all(5),
-        child: Column(
+        child: ListView(
           children: [
-            const SizedBox(height: 200,),
+            const SizedBox(height: 150,),
             Container(
               margin: EdgeInsets.all(8),
               child: TextField(

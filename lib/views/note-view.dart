@@ -48,7 +48,7 @@ class _MyNotesViewState extends State<MyNotesView> {
         ],
       ),
       floatingActionButton: FloatingActionButton(onPressed: ()=>{
-
+        
       },
       tooltip: "add your notes",
       child: const Icon(Icons.add),
