@@ -13,9 +13,10 @@ class VerifyEmailViewState extends State<VerifyEmailView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:const Text('Verify email')),
+      appBar: AppBar(title: const Text('Verify email')),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
               child: const Text("Verify email"),
@@ -32,7 +33,8 @@ class VerifyEmailViewState extends State<VerifyEmailView> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(loginRoute, (route) => false);
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil(loginRoute, (route) => false);
                 },
                 child: Text('Go back'),
               ),
