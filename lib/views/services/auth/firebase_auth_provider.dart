@@ -1,35 +1,37 @@
+import 'package:expense_tracker/firebase_options.dart';
 import 'package:expense_tracker/views/services/auth/auth_exceptions.dart';
 import 'package:expense_tracker/views/services/auth/auth_provider.dart';
 import 'package:expense_tracker/views/services/auth/auth_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'dart:developer' as developer show log;
 class FirebaseAuthProvider implements AuthProvider {
   @override
   Future<AuthUser> createUser(
       {required String email, required String password}) async {
-    // TODO: implement createUser
 
     try {
-      final userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+       await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
       final user = currentUser;
-      if(user != null){
+      if (user != null) {
         return user;
-      }else{
+      } else {
         throw UserNotFoundAuthException();
       }
     } on FirebaseAuthException catch (e) {
-      if(e.code == "weak-password"){
+        developer.log(e.code.toString());
+      if (e.code == "weak-password") {
         throw WeakPasswordAuthException();
-      }else if(e.code == "email-already-in-use"){
+      } else if (e.code == "email-already-in-use") {
         throw EmailAlreadyInAuthException();
-      }else if(e.code == "invalid-email"){
+      } else if (e.code == "invalid-email") {
         throw InvalidEmailAuthException();
-      }else{
+      } else {
         throw GenericAuthException();
       }
     } catch (_) {
-        throw GenericAuthException();
+      throw GenericAuthException();
     }
   }
 
@@ -46,46 +48,54 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
-  Future<AuthUser> login({required String email, required String password})async {
-    try{
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+  Future<AuthUser> login(
+      {required String email, required String password}) async {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
       final user = currentUser;
-      if(user != null){
+      if (user != null) {
         return user;
-      }else{
+      } else {
         throw UserNotFoundAuthException();
       }
-    }on FirebaseAuthException catch(e){
-      if(e.code == "user-not-found"){
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "user-not-found") {
         throw UserNotFoundAuthException();
-      }else if(e.code == "wrong-password"){
+      } else if (e.code == "wrong-password") {
         throw WeakPasswordAuthException();
-      }else{
+      } else {
         throw GenericAuthException();
       }
-    }catch(_){
+    } catch (_) {
       throw GenericAuthException();
     }
   }
 
   @override
-  Future<void> logout() async{
+  Future<void> logout() async {
     // TODO: implement logout
     final user = FirebaseAuth.instance.currentUser;
-    if(user != null){
+    if (user != null) {
       await FirebaseAuth.instance.signOut();
-    }else{
+    } else {
       throw UserNotLoggedInAuthException();
     }
-    
   }
 
   @override
   Future<void> sendEmailVerification() async {
-    if(currentUser != null){
+    if (currentUser != null) {
       await FirebaseAuth.instance.currentUser?.sendEmailVerification();
-    }else{
+    } else {
       throw UserNotLoggedInAuthException();
     }
+  }
+
+  @override
+  Future<void> initialize() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   }
 }
