@@ -1,13 +1,11 @@
-
 import 'package:expense_tracker/constants/routes.dart';
 import 'package:expense_tracker/views/login-view.dart';
 import 'package:expense_tracker/views/note-view.dart';
 import 'package:expense_tracker/views/register-view.dart';
+import 'package:expense_tracker/views/services/auth/auth_service.dart';
 import 'package:expense_tracker/views/verify-email-veiw.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'firebase_options.dart';
+
 
 void main(List<String> args) {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,16 +31,14 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  FutureBuilder(
-          future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          ),
+          future: AuthService.firebase().initialize(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.done:
-                final user = FirebaseAuth.instance.currentUser;
+                final user = AuthService.firebase().currentUser;
                 if(user != null){
 
-                if(user.emailVerified){
+                if(user.isEmailVerified){
                   return const MyNotesView();
                 }else{
                   
@@ -54,7 +50,7 @@ class HomePage extends StatelessWidget {
                 }
                 
               default:
-                return Scaffold(body: const CircularProgressIndicator());
+                return const Scaffold(body: CircularProgressIndicator());
             }
           });
   }

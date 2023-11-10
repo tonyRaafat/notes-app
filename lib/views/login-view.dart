@@ -1,5 +1,5 @@
 import 'package:expense_tracker/constants/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:expense_tracker/views/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
 
@@ -91,22 +91,19 @@ class _LoginViewState extends State<LoginView> {
                           
                           onPressed: () async {
                             final email = _email.text;
-                            final pass = _pass.text;
-                            try {
-                              final userCredential = await FirebaseAuth.instance
-                                  .signInWithEmailAndPassword(
-                                      email: email, password: pass);
-                              devtools.log(userCredential.toString());
-                              final user = FirebaseAuth.instance.currentUser;
-                              if (user?.emailVerified ?? false) {
+                            final password = _pass.text;
+                            try  {
+                              await AuthService.firebase().login(email: email, password: password);
+                              final user = AuthService.firebase().currentUser;
+                              if (user?.isEmailVerified ?? false) {
                                 Navigator.of(context).pushNamedAndRemoveUntil(
                                     notesRoute, (route) => false);
                               } else {
                                 Navigator.of(context)
                                     .pushNamed(emailVerificationRoute);
                               }
-                            } on FirebaseAuthException catch (e) {
-                              devtools.log(e.code.toString());
+                            } catch (e) {
+                              devtools.log(e.toString());
                             }
                           },
                           child: const Text("Login")

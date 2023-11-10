@@ -1,5 +1,6 @@
 import 'package:expense_tracker/constants/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:expense_tracker/views/services/auth/auth_exceptions.dart';
+import 'package:expense_tracker/views/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devTools show log;
 
@@ -77,15 +78,12 @@ class _RegisterViewState extends State<RegisterView> {
                     child: ElevatedButton(
                       onPressed: () async {
                         final email = _email.text;
-                        final pass = _pass.text;
+                        final password = _pass.text;
                         try {
-                          final userCredential = await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                                  email: email, password: pass);
-                          Navigator.of(context)
-                              .pushNamed(emailVerificationRoute);
-                        } on FirebaseAuthException catch (e) {
-                          devTools.log(e.code.toString());
+                          await AuthService.firebase().createUser(email: email, password: password);
+                          Navigator.of(context).pushNamed(emailVerificationRoute);
+                        }on GenericAuthException catch (e) {
+                          devTools.log(e.toString());
                         }
                       },
                       child: const Text("Register"),
