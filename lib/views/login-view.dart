@@ -1,4 +1,5 @@
 import 'package:expense_tracker/constants/routes.dart';
+import 'package:expense_tracker/views/services/auth/auth_exceptions.dart';
 import 'package:expense_tracker/views/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
@@ -13,7 +14,8 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _pass;
-  bool badPass = false;
+  String? emailError ;
+  String? passError ;
 
   @override
   void initState() {
@@ -53,12 +55,14 @@ class _LoginViewState extends State<LoginView> {
                 enableInteractiveSelection: true,
                 controller: _email,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
+                
+                decoration:  InputDecoration(
                     hintText: "email@gmail.com",
                     focusedBorder: OutlineInputBorder(),
                     border: OutlineInputBorder(),
                     label:  Text('email'),
-                    contentPadding: EdgeInsets.only(left: 10)
+                    contentPadding: EdgeInsets.only(left: 10),
+                    errorText: emailError,
                     ),
               ),
             ),
@@ -69,7 +73,7 @@ class _LoginViewState extends State<LoginView> {
                 controller: _pass,
                 obscureText: true,
                 autofillHints:const [AutofillHints.password],
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                     label: Text(
                       'password',
                       selectionColor: Color.fromARGB(0, 196, 36, 36),
@@ -77,7 +81,8 @@ class _LoginViewState extends State<LoginView> {
                     focusedBorder: OutlineInputBorder(),
                     border: OutlineInputBorder(),
                     hintText: "pass",
-                    contentPadding: EdgeInsets.only(left: 10)
+                    contentPadding: EdgeInsets.only(left: 10),
+                    errorText: passError,
                     ),
               ),
             ),
@@ -94,6 +99,7 @@ class _LoginViewState extends State<LoginView> {
                             final password = _pass.text;
                             try  {
                               await AuthService.firebase().login(email: email, password: password);
+                              
                               final user = AuthService.firebase().currentUser;
                               if (user?.isEmailVerified ?? false) {
                                 Navigator.of(context).pushNamedAndRemoveUntil(
@@ -102,8 +108,18 @@ class _LoginViewState extends State<LoginView> {
                                 Navigator.of(context)
                                     .pushNamed(emailVerificationRoute);
                               }
-                            } catch (e) {
-                              devtools.log(e.toString());
+                            } on InvalidEmailAuthException catch (e) {
+                                emailError = "Invalid email";
+                              setState(() {
+                              });
+                            } on WrongPasswordAuthException catch (e){
+                              setState(() {
+                                passError = "worng password";
+                              });
+                            }on GenericAuthException catch (e) {
+                              setState(() {
+                                emailError = "somthing is wrong";
+                              });
                             }
                           },
                           child: const Text("Login")

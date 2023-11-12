@@ -1,5 +1,7 @@
 //login exceptions
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 class UserNotFoundAuthException implements Exception {}
 
 class WrongPasswordAuthException implements Exception {} 

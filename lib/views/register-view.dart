@@ -14,6 +14,8 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _pass;
+  String? emailError;
+  String? passError;
 
   @override
   void initState() {
@@ -45,12 +47,14 @@ class _RegisterViewState extends State<RegisterView> {
               child: TextField(
                 controller: _email,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                     hintText: "email@gmail.com",
                     focusedBorder: OutlineInputBorder(),
                     border: OutlineInputBorder(),
                     label: Text('email'),
-                    contentPadding: EdgeInsets.only(left: 10)),
+                    contentPadding: EdgeInsets.only(left: 10),
+                    errorText: emailError,
+                    ),
               ),
             ),
             Container(
@@ -59,15 +63,17 @@ class _RegisterViewState extends State<RegisterView> {
                 controller: _pass,
                 obscureText: true,
                 autofillHints: const [AutofillHints.password],
-                decoration: const InputDecoration(
-                    label: Text(
+                decoration:  InputDecoration(
+                    label: const Text(
                       'password',
                       selectionColor: Color.fromARGB(0, 196, 36, 36),
                     ),
                     focusedBorder: OutlineInputBorder(),
                     border: OutlineInputBorder(),
                     hintText: "pass",
-                    contentPadding: EdgeInsets.only(left: 10)),
+                    contentPadding: EdgeInsets.only(left: 10),
+                    errorText: passError
+                    ),
               ),
             ),
             Row(
@@ -80,10 +86,27 @@ class _RegisterViewState extends State<RegisterView> {
                         final email = _email.text;
                         final password = _pass.text;
                         try {
+                          setState(() {
+                            emailError = null;
+                            passError = null;
+                          });
                           await AuthService.firebase().createUser(email: email, password: password);
                           Navigator.of(context).pushNamed(emailVerificationRoute);
                         }on GenericAuthException catch (e) {
-                          devTools.log(e.toString());
+                          setState(() {
+                          });
+                        } on InvalidEmailAuthException catch (e){
+                            emailError = "Invalid email";
+                          setState(() {
+                          });
+                        } on WeakPasswordAuthException catch (e){
+                            passError = "weak password";
+                          setState(() {
+                          });
+                        } on EmailAlreadyInAuthException catch (e) {
+                            emailError = "Email already in use";
+                          setState(() {
+                          });
                         }
                       },
                       child: const Text("Register"),
