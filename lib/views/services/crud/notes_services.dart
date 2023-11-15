@@ -1,3 +1,5 @@
+import 'dart:js_util';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart'
@@ -17,8 +19,21 @@ class UserAlreadyExists implements Exception {}
 
 class CouldNotFindUser implements Exception {}
 
+class DidNotFindNote implements Exception {}
+
 class notesService {
   Database? _db;
+
+  Future<DatabaseNote> getNote({required int id}) async {
+    final db = _getDatabaseOrThrow();
+    final note = await db.query(noteTable,limit: 1,where: 'id = ?',whereArgs: [id]);
+
+    if(note.isEmpty){
+      throw DidNotFindNote();
+    }else{
+      return DatabaseNote.fromRow(note.first);
+    }
+  }
 
   Future<DatabaseNote> createNote({required DatabaseUser owner,}) async{
     final db = _getDatabaseOrThrow();
