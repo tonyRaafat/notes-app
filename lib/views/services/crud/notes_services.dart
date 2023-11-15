@@ -18,6 +18,21 @@ class CouldNotFindUser implements Exception {}
 class notesService {
   Database? _db;
 
+  Future<DatabaseNote> createNote({required DatabaseUser owner,}) async{
+    final db = _getDatabaseOrThrow();
+    await getUser(email: owner.email);
+    
+    const text = '';
+    final noteId = await db.insert(noteTable, {
+      userIdColumn:owner.id,
+      text:text,
+      isSyncedWithCloudColumn:1,
+    });
+
+    final note = DatabaseNote(id: noteId, userId: owner.id, text: text, isSyncedWithCloud: true);
+    return note;
+  }
+
   Database _getDatabaseOrThrow() {
     final db = _db;
     if (db == null) {
