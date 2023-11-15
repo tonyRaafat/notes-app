@@ -35,6 +35,13 @@ class notesService {
     }
   }
 
+  Future<Iterable<DatabaseNote>> getAllNotes() async{
+    final db = _getDatabaseOrThrow();
+    final notes = await db.query(noteTable);
+
+    return  notes.map((noteRow) => DatabaseNote.fromRow(noteRow));
+  }
+
   Future<DatabaseNote> createNote({required DatabaseUser owner,}) async{
     final db = _getDatabaseOrThrow();
     await getUser(email: owner.email);
@@ -57,6 +64,11 @@ class notesService {
     if (deleteCount != 1) {
       throw CouldNotDeleteNote();
     }
+  }
+
+  Future<int> deleteAllNotes() async{
+    final db = _getDatabaseOrThrow();
+    return await db.delete(noteTable);
   }
 
   Database _getDatabaseOrThrow() {
