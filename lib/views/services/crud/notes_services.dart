@@ -11,6 +11,8 @@ class DatabaseIsNotOpen implements Exception {}
 
 class CouldNotDeleteUSer implements Exception {}
 
+class CouldNotDeleteNote implements Exception {}
+
 class UserAlreadyExists implements Exception {}
 
 class CouldNotFindUser implements Exception {}
@@ -31,6 +33,15 @@ class notesService {
 
     final note = DatabaseNote(id: noteId, userId: owner.id, text: text, isSyncedWithCloud: true);
     return note;
+  }
+
+  Future<void> deleteNote({required int noteId}) async {
+    final db = _getDatabaseOrThrow();
+
+    final deleteCount = await db.delete(noteTable,where: 'id = ?',whereArgs: [noteId]);
+    if (deleteCount != 1) {
+      throw CouldNotDeleteNote();
+    }
   }
 
   Database _getDatabaseOrThrow() {
@@ -75,9 +86,9 @@ class notesService {
 
   Future<void> deleteUser({required String email}) async {
     final db = _getDatabaseOrThrow();
-    final deletCount = await db.delete(userTable,
+    final deleteCount = await db.delete(userTable,
         where: 'email = ?', whereArgs: [email.toLowerCase()]);
-    if (deletCount != 1) {
+    if (deleteCount != 1) {
       throw CouldNotDeleteUSer();
     }
   }
