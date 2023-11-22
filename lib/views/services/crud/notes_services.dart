@@ -4,23 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart'
     show MissingPlatformDirectoryException, getApplicationDocumentsDirectory;
-
-class DatabaseAlreadyOpened implements Exception {}
-
-class UnableToGetDocumentDirectory implements Exception {}
-
-class DatabaseIsNotOpen implements Exception {}
-
-class CouldNotDeleteUSer implements Exception {}
-
-class CouldNotDeleteNote implements Exception {}
-
-class UserAlreadyExists implements Exception {}
-
-class CouldNotFindUser implements Exception {}
-
-class DidNotFindNote implements Exception {}
-
+import 'package:expense_tracker/views/services/crud/crud_exeptions.dart';
 class notesService {
   Database? _db;
 
@@ -33,6 +17,24 @@ class notesService {
     }else{
       return DatabaseNote.fromRow(note.first);
     }
+  }
+
+  Future<DatabaseNote> updateNote({required DatabaseNote note , required String text }) async {
+    final db = _getDatabaseOrThrow();
+
+    await getNote(id:note.id);
+
+   final updateCount = await db.update(noteTable,{
+      textColumn:text,
+      isSyncedWithCloudColumn:0
+    });
+
+    if(updateCount == 0){
+      throw CouldNotUpdateNote();
+    }else{
+      return await getNote(id:note.id);
+    }
+
   }
 
   Future<Iterable<DatabaseNote>> getAllNotes() async{
