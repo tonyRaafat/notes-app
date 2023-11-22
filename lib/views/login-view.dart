@@ -2,7 +2,6 @@ import 'package:expense_tracker/constants/routes.dart';
 import 'package:expense_tracker/views/services/auth/auth_exceptions.dart';
 import 'package:expense_tracker/views/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -108,15 +107,15 @@ class _LoginViewState extends State<LoginView> {
                                 Navigator.of(context)
                                     .pushNamed(emailVerificationRoute);
                               }
-                            } on InvalidEmailAuthException catch (e) {
+                            } on InvalidEmailAuthException  {
                                 emailError = "Invalid email";
                               setState(() {
                               });
-                            } on WrongPasswordAuthException catch (e){
+                            } on WrongPasswordAuthException {
                               setState(() {
                                 passError = "worng password";
                               });
-                            }on GenericAuthException catch (e) {
+                            }on GenericAuthException {
                               setState(() {
                                 emailError = "somthing is wrong";
                               });

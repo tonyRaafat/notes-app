@@ -1,4 +1,3 @@
-import 'dart:developer' as devtools show log;
 import 'package:expense_tracker/constants/routes.dart';
 import 'package:expense_tracker/enums/menu-actions.dart';
 import 'package:expense_tracker/views/services/auth/auth_service.dart';
