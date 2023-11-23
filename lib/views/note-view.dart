@@ -1,18 +1,34 @@
 import 'package:expense_tracker/constants/routes.dart';
 import 'package:expense_tracker/enums/menu-actions.dart';
 import 'package:expense_tracker/views/services/auth/auth_service.dart';
+import 'package:expense_tracker/views/services/crud/notes_services.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MyNotesView extends StatefulWidget {
   const MyNotesView({ Key? key }) : super(key: key);
-
   @override
   _MyNotesViewState createState() => _MyNotesViewState();
 }
 
 
 class _MyNotesViewState extends State<MyNotesView> {
+  late final NotesService _notesService;
+  String get userEmail => AuthService.firebase().currentUser!.email!;
+
+  @override
+  void initState() {
+    _notesService = NotesService();
+    _notesService.open();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _notesService.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,23 +52,31 @@ class _MyNotesViewState extends State<MyNotesView> {
             return const [
               PopupMenuItem<MenuAction>(
                 value: MenuAction.logout,
-                child: Text("logut")
+                child: Text("logout")
                 )
             ];
             })
         ],
       ),
-      body:const Column(
-        children: [
-           Text("you are logged in!"),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(onPressed: ()=>{
-        
-      },
-      tooltip: "add your notes",
-      child: const Icon(Icons.add),
-      ),
+      body:FutureBuilder(future: _notesService.getOrCreateUser(email: userEmail), 
+           builder: (context,snapshot){
+              switch(snapshot.connectionState){
+                case ConnectionState.done:
+                  return StreamBuilder(
+                   stream: _notesService.allNotes,
+                   builder: ((context, snapshot) {
+                     switch(snapshot.connectionState){
+                       case ConnectionState.waiting:
+                         return const Center(child: Text('waiting for all notes'));
+                       default:
+                          return  const Center(child: CircularProgressIndicator()); 
+                     }
+                   }));
+                default:
+                  return  const Center(child: CircularProgressIndicator());
+              }
+           }
+           )
       
     );
   }
