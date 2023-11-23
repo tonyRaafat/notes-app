@@ -1,10 +1,12 @@
 import 'package:expense_tracker/constants/routes.dart';
 import 'package:expense_tracker/views/login-view.dart';
-import 'package:expense_tracker/views/note-view.dart';
+import 'package:expense_tracker/views/notes/note_view.dart';
+import 'package:expense_tracker/views/notes/notes_view.dart';
 import 'package:expense_tracker/views/register-view.dart';
 import 'package:expense_tracker/views/services/auth/auth_service.dart';
 import 'package:expense_tracker/views/verify-email-veiw.dart';
 import 'package:flutter/material.dart';
+// import 'package:path/path.dart';
 
 
 void main(List<String> args) {
@@ -20,6 +22,7 @@ void main(List<String> args) {
         registerRoute: (context) => const RegisterView(),
         notesRoute:(context)=> const MyNotesView(),
         emailVerificationRoute:(context) => const VerifyEmailView(),
+        noteRoute:(context)=> const MyNoteView()
       },
     ),
   );
