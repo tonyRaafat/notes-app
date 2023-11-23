@@ -107,7 +107,7 @@ class _LoginViewState extends State<LoginView> {
                                 Navigator.of(context)
                                     .pushNamed(emailVerificationRoute);
                               }
-                            } on InvalidEmailAuthException  {
+                            } on UserNotFoundAuthException  {
                                 emailError = "Invalid email";
                               setState(() {
                               });
@@ -118,6 +118,7 @@ class _LoginViewState extends State<LoginView> {
                             }on GenericAuthException {
                               setState(() {
                                 emailError = "somthing is wrong";
+                                passError = "somthing is wrong";
                               });
                             }
                           },
