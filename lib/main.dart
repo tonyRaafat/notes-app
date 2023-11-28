@@ -1,6 +1,6 @@
 import 'package:expense_tracker/constants/routes.dart';
 import 'package:expense_tracker/views/login-view.dart';
-import 'package:expense_tracker/views/notes/note_view.dart';
+import 'package:expense_tracker/views/notes/new_note_view.dart';
 import 'package:expense_tracker/views/notes/notes_view.dart';
 import 'package:expense_tracker/views/register-view.dart';
 import 'package:expense_tracker/views/services/auth/auth_service.dart';
@@ -22,7 +22,7 @@ void main(List<String> args) {
         registerRoute: (context) => const RegisterView(),
         notesRoute:(context)=> const MyNotesView(),
         emailVerificationRoute:(context) => const VerifyEmailView(),
-        noteRoute:(context)=> const MyNoteView()
+        newNoteRoute:(context)=> const NewNoteView()
       },
     ),
   );

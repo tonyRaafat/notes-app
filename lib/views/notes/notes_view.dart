@@ -81,7 +81,7 @@ class _MyNotesViewState extends State<MyNotesView> {
         child: const Icon(Icons.add),
         onPressed: () async {
           Navigator.of(context)
-              .pushNamedAndRemoveUntil(noteRoute, (route) => false);
+              .pushNamedAndRemoveUntil(newNoteRoute, (route) => false);
         },
       ),
     );
